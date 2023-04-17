@@ -42,8 +42,8 @@ public class StatisticsMapper {
     public List<ViewStatsDto> mapToViewStatsDtos(List<ViewStats> viewStatsList) {
         List<ViewStatsDto> viewStatsDtoList = new ArrayList<>();
         for (ViewStats viewStats : viewStatsList) {
-            ViewStatsDto ViewStatsDto = mapToViewStatsDto(viewStats);
-            viewStatsDtoList.add(ViewStatsDto);
+            ViewStatsDto viewStatsDto = mapToViewStatsDto(viewStats);
+            viewStatsDtoList.add(viewStatsDto);
         }
         return viewStatsDtoList;
     }
