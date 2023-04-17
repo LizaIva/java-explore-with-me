@@ -1,0 +1,38 @@
+package ru.practicum.explorewithme.statistics.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import ru.practicum.explorewithme.statistics.model.Statistics;
+import ru.practicum.explorewithme.statistics.model.ViewStats;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Repository
+public interface StatisticsRepository extends JpaRepository<Statistics, Integer> {
+    @Query(
+            "select new ru.practicum.explorewithme.statistics.model.ViewStats(s.app, s.uri, count(s.uri)) " +
+                    "from Statistics s " +
+                    "where s.created > :start " +
+                    "AND s.created < :end " +
+                    "and (:uris is null or s.uri in (:uris))" +
+                    "group by s.app, s.uri"
+    )
+    List<ViewStats> findStatisticsByTimeAndUnique(@Param("start") LocalDateTime start,
+                                                  @Param("end") LocalDateTime end,
+                                                  @Param("uris") List<String> uris);
+
+    @Query(
+            "select new ru.practicum.explorewithme.statistics.model.ViewStats(s.app, s.uri, count(s.uri)) " +
+                    "from Statistics s " +
+                    "where s.created > :start " +
+                    "and s.created < :end " +
+                    "and (:uris is null or s.uri in (:uris)) " +
+                    "group by s.app, s.uri"
+    )
+    List<ViewStats> findStatisticsByTime(@Param("start") LocalDateTime start,
+                                         @Param("end") LocalDateTime end,
+                                         @Param("uris") List<String> uris);
+}
