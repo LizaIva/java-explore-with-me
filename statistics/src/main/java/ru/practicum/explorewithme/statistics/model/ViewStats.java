@@ -2,8 +2,6 @@ package ru.practicum.explorewithme.statistics.model;
 
 import lombok.*;
 
-import javax.persistence.SqlResultSetMapping;
-
 @Getter
 @Setter
 @AllArgsConstructor

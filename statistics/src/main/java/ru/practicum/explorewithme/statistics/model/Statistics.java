@@ -15,11 +15,11 @@ import java.time.LocalDateTime;
 @NamedNativeQuery(
         name = "find_uniq_stat_view",
         query = "select s.app, s.uri, count(s.uri) as hits " +
-                        "from (select distinct on (s.ip) s.* from STATISTICS s " +
-                        "           where s.created > :start " +
-                        "           and s.created < :end " +
-                        "           and (:skipUrisCheck = 1 or s.uri in (:uris))) as s " +
-                        "group by s.app, s.uri",
+                "from (select distinct on (s.ip) s.* from STATISTICS s " +
+                "           where s.created > :start " +
+                "           and s.created < :end " +
+                "           and (:skipUrisCheck = 1 or s.uri in (:uris))) as s " +
+                "group by s.app, s.uri",
         resultSetMapping = "uniq_stat_view"
 )
 @SqlResultSetMapping(

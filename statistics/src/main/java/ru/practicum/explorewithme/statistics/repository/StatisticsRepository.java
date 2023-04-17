@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public interface StatisticsRepository extends JpaRepository<Statistics, Integer> {
-    @Query(name = "find_uniq_stat_view" , nativeQuery = true)
+    @Query(name = "find_uniq_stat_view", nativeQuery = true)
     List<ViewStats> findStatisticsByTimeAndUnique(@Param("start") LocalDateTime start,
                                                   @Param("end") LocalDateTime end,
                                                   @Param("skipUrisCheck") Integer skipUrisCheck,
