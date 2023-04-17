@@ -42,17 +42,9 @@ public class StatisticsMapper {
     public List<ViewStatsDto> mapToViewStatsDtos(List<ViewStats> viewStatsList) {
         List<ViewStatsDto> viewStatsDtoList = new ArrayList<>();
         for (ViewStats viewStats : viewStatsList) {
-            ViewStatsDto viewStatsDto = mapToViewStatsDto(viewStats);
-            viewStatsDtoList.add(viewStatsDto);
+            ViewStatsDto ViewStatsDto = mapToViewStatsDto(viewStats);
+            viewStatsDtoList.add(ViewStatsDto);
         }
         return viewStatsDtoList;
-    }
-
-    public ViewStats mapToViewStats(ViewStatsDto viewStatsDto) {
-        return ViewStats.builder()
-                .app(viewStatsDto.getApp())
-                .uri(viewStatsDto.getUri())
-                .hits(viewStatsDto.getHits())
-                .build();
     }
 }

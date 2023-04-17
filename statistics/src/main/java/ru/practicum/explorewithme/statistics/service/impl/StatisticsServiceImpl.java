@@ -15,6 +15,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -39,7 +40,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         LocalDateTime decodedEnd = decodeDateTime(end);
 
         if (uris != null && uris.isEmpty()) {
-            uris = null;
+            uris = Collections.emptyList();
         }
 
         List<ViewStats> viewStats = statisticsStorage.get(decodedStart, decodedEnd, uris, unique);

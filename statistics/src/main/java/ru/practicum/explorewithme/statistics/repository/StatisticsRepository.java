@@ -12,16 +12,10 @@ import java.util.List;
 
 @Repository
 public interface StatisticsRepository extends JpaRepository<Statistics, Integer> {
-    @Query(
-            "select new ru.practicum.explorewithme.statistics.model.ViewStats(s.app, s.uri, count(s.uri)) " +
-                    "from Statistics s " +
-                    "where s.created > :start " +
-                    "AND s.created < :end " +
-                    "and (:uris is null or s.uri in (:uris))" +
-                    "group by s.app, s.uri"
-    )
+    @Query(name = "find_uniq_stat_view" , nativeQuery = true)
     List<ViewStats> findStatisticsByTimeAndUnique(@Param("start") LocalDateTime start,
                                                   @Param("end") LocalDateTime end,
+                                                  @Param("skipUrisCheck") Integer skipUrisCheck,
                                                   @Param("uris") List<String> uris);
 
     @Query(
@@ -29,10 +23,11 @@ public interface StatisticsRepository extends JpaRepository<Statistics, Integer>
                     "from Statistics s " +
                     "where s.created > :start " +
                     "and s.created < :end " +
-                    "and (:uris is null or s.uri in (:uris)) " +
+                    "and (:skipUrisCheck = 1 or s.uri in (:uris)) " +
                     "group by s.app, s.uri"
     )
     List<ViewStats> findStatisticsByTime(@Param("start") LocalDateTime start,
                                          @Param("end") LocalDateTime end,
+                                         @Param("skipUrisCheck") Integer skipUrisCheck,
                                          @Param("uris") List<String> uris);
 }

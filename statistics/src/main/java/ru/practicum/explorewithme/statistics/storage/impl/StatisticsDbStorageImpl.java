@@ -23,9 +23,9 @@ public class StatisticsDbStorageImpl implements StatisticsStorage {
     @Override
     public List<ViewStats> get(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
         if (unique) {
-            return statisticsRepository.findStatisticsByTimeAndUnique(start, end, uris);
+            return statisticsRepository.findStatisticsByTimeAndUnique(start, end, uris == null ? 1 : 0, uris);
         } else {
-            return statisticsRepository.findStatisticsByTime(start, end, uris);
+            return statisticsRepository.findStatisticsByTime(start, end, uris == null ? 1 : 0, uris);
         }
     }
 }
