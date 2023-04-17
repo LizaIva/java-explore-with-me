@@ -9,7 +9,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
-  statistics:
+  stats-server:
     build: statistics
     ports:
       - "9090:9090"
