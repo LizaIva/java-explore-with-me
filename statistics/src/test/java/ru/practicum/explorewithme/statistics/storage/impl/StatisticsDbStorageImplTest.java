@@ -17,10 +17,10 @@ import ru.practicum.explorewithme.statistics.utils.StatisticsMapper;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static ru.practicum.explorewithme.statistics.service.impl.StatisticsServiceImpl.START_END_DATE_FORMATTER;
 
 @SpringBootTest
@@ -73,12 +73,11 @@ class StatisticsDbStorageImplTest {
         List<ViewStatsDto> actualStatistics = statisticsService.get(
                 URLEncoder.encode(start, StandardCharsets.UTF_8),
                 URLEncoder.encode(end, StandardCharsets.UTF_8),
-                Collections.emptyList(),
+                null,
                 true
         );
 
         assertNotNull(actualStatistics);
-        assertFalse(actualStatistics.isEmpty());
 
         ViewStatsDto actual = actualStatistics.get(0);
 
