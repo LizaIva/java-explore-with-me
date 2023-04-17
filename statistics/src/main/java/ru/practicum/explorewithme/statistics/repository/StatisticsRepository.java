@@ -24,7 +24,8 @@ public interface StatisticsRepository extends JpaRepository<Statistics, Integer>
                     "where s.created > :start " +
                     "and s.created < :end " +
                     "and (:skipUrisCheck = 1 or s.uri in (:uris)) " +
-                    "group by s.app, s.uri"
+                    "group by s.app, s.uri " +
+                    "order by count(s.uri) desc "
     )
     List<ViewStats> findStatisticsByTime(@Param("start") LocalDateTime start,
                                          @Param("end") LocalDateTime end,

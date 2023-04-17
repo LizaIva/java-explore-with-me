@@ -19,7 +19,8 @@ import java.time.LocalDateTime;
                 "           where s.created > :start " +
                 "           and s.created < :end " +
                 "           and (:skipUrisCheck = 1 or s.uri in (:uris))) as s " +
-                "group by s.app, s.uri",
+                "group by s.app, s.uri " +
+                "order by count(s.uri) desc ",
         resultSetMapping = "uniq_stat_view"
 )
 @SqlResultSetMapping(
