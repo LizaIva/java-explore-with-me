@@ -42,15 +42,19 @@ class StatisticsDbStorageImplTest {
     LocalDateTime now = LocalDateTime.now();
     private static final DateTimeFormatter START_END_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    StatisticsDto statisticsDto = statisticsService.put(StatisticsDto.builder()
-            .app("ewm-main-service")
-            .uri("/events/1")
-            .ip("192.163.0.1")
-            .created(now)
-            .build());
+    private static final String APP = "ewm-main-service";
+    private static final String URI = "/events/1";
+    private static final String IP = "192.163.0.1";
 
     @Test
     void put() {
+        StatisticsDto statisticsDto = statisticsService.put(StatisticsDto.builder()
+                .app(APP)
+                .uri(URI)
+                .ip(IP)
+                .created(now)
+                .build());
+
         List<Statistics> actualStatistics = statisticsRepository.findAll();
         StatisticsDto actualStatisticsDto = statisticsMapper.mapToStatisticsDto(actualStatistics.get(0));
 
@@ -61,6 +65,13 @@ class StatisticsDbStorageImplTest {
 
     @Test
     void get() {
+        StatisticsDto statisticsDto = statisticsService.put(StatisticsDto.builder()
+                .app(APP)
+                .uri(URI)
+                .ip(IP)
+                .created(now)
+                .build());
+
         String start = now.minusHours(1).format(START_END_DATE_FORMATTER);
         String end = now.plusHours(1).format(START_END_DATE_FORMATTER);
 
