@@ -48,10 +48,10 @@ public class RequestServiceImpl implements RequestService {
                 .created(LocalDateTime.now())
                 .build();
         if (event.getRequestModeration()) {
-            createdRequestDto.setStatus(State.PENDING);
+            createdRequestDto.setStatus(Status.PENDING);
         } else {
-            createdRequestDto.setStatus(State.PUBLISHED);
-            event.setConfirmedRequests(+1);
+            createdRequestDto.setStatus(Status.CONFIRMED);
+            event.setConfirmedRequests(event.getConfirmedRequests() + 1);
             log.info("Update confirmedRequests event with id = {}", event.getId());
             eventStorage.put(event);
         }
