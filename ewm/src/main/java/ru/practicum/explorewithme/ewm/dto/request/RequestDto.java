@@ -2,7 +2,7 @@ package ru.practicum.explorewithme.ewm.dto.request;
 
 import lombok.Builder;
 import lombok.Data;
-import ru.practicum.explorewithme.ewm.model.event.State;
+import ru.practicum.explorewithme.ewm.model.request.Status;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -20,5 +20,5 @@ public class RequestDto {
     @NotNull
     private Integer requester;
     @NotBlank
-    private State status;
+    private Status status;
 }
