@@ -14,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserDbStorageImpl implements UserStorage {
     private final UserRepository userRepository;
+
     @Override
     public User put(User user) {
         return userRepository.saveAndFlush(user);

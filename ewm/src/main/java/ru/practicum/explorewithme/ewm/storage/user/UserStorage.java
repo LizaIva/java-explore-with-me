@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface UserStorage {
     String USER_NOT_FOUND = "User with id = %s not found.";
+
     User put(User user);
 
     List<User> getAll(Integer from, Integer size);

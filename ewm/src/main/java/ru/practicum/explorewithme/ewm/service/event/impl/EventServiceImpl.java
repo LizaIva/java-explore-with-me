@@ -138,12 +138,23 @@ public class EventServiceImpl implements EventService {
                                             String rangeEnd,
                                             Boolean onlyAvailable,
                                             String sort,
-                                            Integer from, Integer size){
+                                            Integer from, Integer size) {
         for (Integer categoryId : categories) {
             categoryStorage.checkCategory(categoryId);
         }
 
-        return null;
+        LocalDateTime start = LocalDateTime.now();
+        LocalDateTime end = LocalDateTime.now().plusYears(10);
+        if (!rangeStart.isEmpty()) {
+            start = decodeDateTime(rangeStart);
+        }
+
+        if (!rangeEnd.isEmpty()) {
+            end = decodeDateTime(rangeEnd);
+        }
+
+        List<Event> events = eventStorage.findAllByFilter(text, categories, paid, start, end, onlyAvailable, sort, from, size);
+        return eventMapper.mapToEventsDto(events);
     }
 
     @Override

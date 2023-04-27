@@ -14,6 +14,7 @@ import java.util.List;
 @RequestMapping(path = "/events")
 public class EventForAllController {
     private final EventService eventService;
+
     @GetMapping("/{eventId}")
     public EventDto getAllByInitiatorId(@PathVariable Integer eventId) {
         log.info("Get event with id = {}.", eventId);
@@ -27,11 +28,12 @@ public class EventForAllController {
             @RequestParam(name = "paid", required = false) Boolean paid,
             @RequestParam(name = "rangeStart", required = false) String rangeStart,
             @RequestParam(name = "rangeEnd", required = false) String rangeEnd,
-            @RequestParam(name = "onlyAvailable", required = false) Boolean onlyAvailable,
+            @RequestParam(name = "onlyAvailable", required = false, defaultValue = "false") Boolean onlyAvailable,
             @RequestParam(name = "sort", required = false) String sort,
-            @RequestParam(name = "from", required = false) Integer from,
+            @RequestParam(name = "from", required = false, defaultValue = "0") Integer from,
             @RequestParam(name = "size", required = false, defaultValue = "10") Integer size) {
         log.info("Get all events with filter");
-        return null;
+        return eventService.getEventsByFilter(text, categories, paid, rangeStart, rangeEnd,
+                onlyAvailable, sort, from, size);
     }
 }

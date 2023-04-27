@@ -63,6 +63,31 @@ public class EventDbStorageImpl implements EventStorage {
     }
 
     @Override
+    public List<Event> findAllByFilter(String text,
+                                       List<Integer> categories,
+                                       Boolean paid,
+                                       LocalDateTime rangeStart,
+                                       LocalDateTime rangeEnd,
+                                       Boolean onlyAvailable,
+                                       String sort,
+                                       Integer from, Integer size) {
+        Sort sortFilter = null;
+        if ("EVENT_DATE".equals(sort)) {
+            sortFilter = PAGIN_SORT_EVENT_DATE;
+        } else {
+            sortFilter = PAGIN_SORT_VIEWS;
+        }
+
+        if (onlyAvailable) {
+            return eventRepository.findAllByFilterOnlyAvailable(text, categories, paid, rangeStart,
+                    rangeEnd, PageRequest.of(from, size, sortFilter)).getContent();
+        } else {
+            return eventRepository.findAllByFilter(text, categories, paid,
+                    rangeStart, rangeEnd, PageRequest.of(from, size, sortFilter)).getContent();
+        }
+    }
+
+    @Override
     public void checkUserOwnerByEventId(Integer eventId, Integer userId) {
         if (!checkUserInitiatorForEvent(eventId, userId)) {
             throw new CheckInitiatorException((String.format(USER_NOT_INITIATOR_FOR_EVENT, userId, eventId)));

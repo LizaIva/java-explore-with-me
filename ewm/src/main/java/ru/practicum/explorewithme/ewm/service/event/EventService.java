@@ -8,8 +8,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventService {
-    String TIME_EXCEPTION ="Not possible to create an event with a time %s";
-    String STATE_EXCEPTION ="Not possible to update an event with state PUBLISHED";
+    String TIME_EXCEPTION = "Not possible to create an event with a time %s";
+    String STATE_EXCEPTION = "Not possible to update an event with state PUBLISHED";
+
     EventDto put(CreateEventDto createEventDto, Integer userId);
 
     List<EventDto> getAllByInitiatorId(Integer initiatorId, Integer from, Integer size);

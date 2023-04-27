@@ -7,6 +7,7 @@ import java.util.Set;
 
 public interface RequestStorage {
     String REQUEST_NOT_FOUND = "Request with id = %s not found.";
+
     Request put(Request request);
 
     List<Request> getRequestsByUserId(Integer userId);

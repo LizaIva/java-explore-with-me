@@ -30,8 +30,8 @@ public class RequestForUserController {
 
     @PatchMapping("/{requestId}/cancel")
     public RequestDto cancelRequest(@PathVariable Integer userId,
-                                    @PathVariable Integer requestId){
+                                    @PathVariable Integer requestId) {
         log.info("Cancel request with id = {} from user with id = {}", requestId, userId);
-        return  requestService.getRequestByUserIdAndRequestId(userId, requestId);
+        return requestService.getRequestByUserIdAndRequestId(userId, requestId);
     }
 }

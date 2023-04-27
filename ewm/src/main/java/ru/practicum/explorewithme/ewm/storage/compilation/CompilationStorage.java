@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface CompilationStorage {
     String COMPILATION_NOT_FOUND = "Compilation with id = %s not found.";
+
     Compilation put(Compilation compilation);
 
     void delete(Integer compilationId);

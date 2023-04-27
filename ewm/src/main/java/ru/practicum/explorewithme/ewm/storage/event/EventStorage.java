@@ -31,6 +31,15 @@ public interface EventStorage {
                                                          LocalDateTime rangeEnd,
                                                          Integer from, Integer size);
 
+    List<Event> findAllByFilter(String text,
+                                List<Integer> categories,
+                                Boolean paid,
+                                LocalDateTime rangeStart,
+                                LocalDateTime rangeEnd,
+                                Boolean onlyAvailable,
+                                String sort,
+                                Integer from, Integer size);
+
     void checkUserOwnerByEventId(Integer eventId, Integer userId);
 
     Boolean checkUserInitiatorForEvent(Integer eventId, Integer userId);

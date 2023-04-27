@@ -31,8 +31,8 @@ public interface EventRepository extends JpaRepository<Event, Integer>,
             "where e.initiator.id IN (:initiatorsId) " +
             "and e.state IN(:states) " +
             "and e.category.id IN(:categories) " +
-            "and e.eventDate < :rangeStart " +
-            "and e.eventDate > :rangeEnd ")
+            "and e.eventDate > :rangeStart " +
+            "and e.eventDate < :rangeEnd ")
     Page<Event> findAllByInitiatorAndStatesAndCategories(@Param("initiatorsId") List<Integer> initiatorsId,
                                                          @Param("states") List<String> states,
                                                          @Param("categories") List<Integer> categories,
@@ -41,17 +41,31 @@ public interface EventRepository extends JpaRepository<Event, Integer>,
                                                          Pageable pageable);
 
     @Query("select e from events e " +
-            "where e.initiator.id IN (:initiatorsId) " +
-            "and e.state IN(:states) " +
+            "where (lower(e.annotation) like concat('%', :text, '%') or lower(e.description) like concat('%', :text, '%'))" +
             "and e.category.id IN(:categories) " +
-            "and e.eventDate < :rangeStart " +
-            "and e.eventDate > :rangeEnd ")
-    Page<Event> findAllByFilter(@Param("initiatorsId") List<Integer> initiatorsId,
-                                                         @Param("states") List<String> states,
-                                                         @Param("categories") List<Integer> categories,
-                                                         @Param("rangeStart") LocalDateTime rangeStart,
-                                                         @Param("rangeEnd") LocalDateTime rangeEnd,
-                                                         Pageable pageable);
+            "and e.paid = :paid " +
+            "and e.eventDate > :rangeStart " +
+            "and e.eventDate < :rangeEnd " +
+            "and e.confirmedRequests <= e.participantLimit+1 ")
+    Page<Event> findAllByFilterOnlyAvailable(@Param("text") String text,
+                                             @Param("categories") List<Integer> categories,
+                                             @Param("paid") Boolean paid,
+                                             @Param("rangeStart") LocalDateTime rangeStart,
+                                             @Param("rangeEnd") LocalDateTime rangeEnd,
+                                             Pageable pageable);
+
+    @Query("select e from events e " +
+            "where (lower(e.annotation) like concat('%', :text, '%') or lower(e.description) like concat('%', :text, '%'))" +
+            "and e.category.id IN(:categories) " +
+            "and e.paid = :paid " +
+            "and e.eventDate > :rangeStart " +
+            "and e.eventDate < :rangeEnd ")
+    Page<Event> findAllByFilter(@Param("text") String text,
+                                @Param("categories") List<Integer> categories,
+                                @Param("paid") Boolean paid,
+                                @Param("rangeStart") LocalDateTime rangeStart,
+                                @Param("rangeEnd") LocalDateTime rangeEnd,
+                                Pageable pageable);
 
     Event findEventByIdAndState(int eventId, State state);
 }

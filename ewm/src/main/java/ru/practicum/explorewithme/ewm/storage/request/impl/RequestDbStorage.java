@@ -2,9 +2,7 @@ package ru.practicum.explorewithme.ewm.storage.request.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.practicum.explorewithme.ewm.exception.CheckValidationRequestException;
 import ru.practicum.explorewithme.ewm.exception.UnknownDataException;
-import ru.practicum.explorewithme.ewm.model.event.State;
 import ru.practicum.explorewithme.ewm.model.request.Request;
 import ru.practicum.explorewithme.ewm.repository.request.RequestRepository;
 import ru.practicum.explorewithme.ewm.storage.request.RequestStorage;

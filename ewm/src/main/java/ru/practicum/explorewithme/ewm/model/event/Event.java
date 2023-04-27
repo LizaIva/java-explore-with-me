@@ -3,10 +3,10 @@ package ru.practicum.explorewithme.ewm.model.event;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import ru.practicum.explorewithme.ewm.model.category.Category;
 import ru.practicum.explorewithme.ewm.model.compilation.Compilation;
 import ru.practicum.explorewithme.ewm.model.request.Request;
 import ru.practicum.explorewithme.ewm.model.user.User;
-import ru.practicum.explorewithme.ewm.model.category.Category;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
