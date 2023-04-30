@@ -26,3 +26,4 @@ services:
       - db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/explore_with_me
+      - STATS_SERVER_URL=http://stats-server:9090/hit

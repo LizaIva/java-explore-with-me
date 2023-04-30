@@ -3,6 +3,7 @@ package ru.practicum.explorewithme.ewm.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.practicum.explorewithme.ewm.dto.stats.StatisticsDto;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class StatsClient {
@@ -44,6 +46,8 @@ public class StatsClient {
                 .uri(new URI(statsServiceUrl))
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .build();
+
+        log.info("|-- Request to stats service {}", clientRequest.toString());
 
         HttpClient.newBuilder().build()
                 .send(clientRequest, HttpResponse.BodyHandlers.ofString());
