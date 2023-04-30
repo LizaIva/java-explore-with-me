@@ -3,6 +3,7 @@ package ru.practicum.explorewithme.ewm.service.request.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.explorewithme.ewm.dto.request.InformationRequestDto;
 import ru.practicum.explorewithme.ewm.dto.request.RequestDto;
 import ru.practicum.explorewithme.ewm.exception.CheckDuplicateRequestException;
 import ru.practicum.explorewithme.ewm.exception.CheckValidationRequestException;
@@ -20,7 +21,8 @@ import ru.practicum.explorewithme.ewm.utils.request.RequestMapper;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
+import static ru.practicum.explorewithme.ewm.model.request.Status.CANCELED;
 
 @Slf4j
 @Service
@@ -40,7 +42,10 @@ public class RequestServiceImpl implements RequestService {
         checkUserIsInitiatorEvent(eventId, userId);
 
         Event event = eventStorage.getEventById(eventId);
-        checkEventIsValid(event, 1);
+        if (!State.PUBLISHED.equals(event.getState())
+                || event.getConfirmedRequests() + 1 > event.getParticipantLimit()) {
+            throw new CheckValidationRequestException(VALIDATION_REQUEST_EXCEPTION);
+        }
 
         RequestDto createdRequestDto = RequestDto.builder()
                 .requester(userId)
@@ -64,15 +69,15 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public EventRequestStatusUpdateResultDto updateRequest(Integer userId, Integer eventId, Set<Integer> requestsId, String status) {
+    public EventRequestStatusUpdateResultDto updateRequest(Integer userId, Integer eventId, InformationRequestDto informationRequestDto) {
 
         userStorage.checkUser(userId);
         eventStorage.checkEvent(eventId);
-        for (Integer id : requestsId) {
+        for (Integer id : informationRequestDto.getRequestIds()) {
             requestStorage.checkRequestExist(id);
         }
 
-        List<Request> requests = requestStorage.getRequestByIds(requestsId);
+        List<Request> requests = requestStorage.getRequestByIds(informationRequestDto.getRequestIds());
         for (Request request : requests) {
             checkRequestStatus(request);
         }
@@ -84,8 +89,12 @@ public class RequestServiceImpl implements RequestService {
         } else {
             List<Request> confirmed = new ArrayList<>();
             List<Request> rejected = new ArrayList<>();
+
             for (Request request : requests) {
-                if (checkLimitEvent(event) && Status.CONFIRMED.equals(Status.valueOf(status))) {
+                if (event.getConfirmedRequests() + 1 > event.getParticipantLimit()) {
+                    throw new CheckValidationRequestException(VALIDATION_REQUEST_EXCEPTION);
+                }
+                if (Status.CONFIRMED.equals(informationRequestDto.getStatus())) {
                     request.setStatus(Status.CONFIRMED);
                     requestStorage.put(request);
                     event.setConfirmedRequests(event.getConfirmedRequests() + 1);
@@ -93,7 +102,8 @@ public class RequestServiceImpl implements RequestService {
 
                     confirmed.add(request);
                 } else {
-                    request.setStatus(Status.CANCELED);
+
+                    request.setStatus(Status.REJECTED);
                     requestStorage.put(request);
 
                     rejected.add(request);
@@ -101,7 +111,7 @@ public class RequestServiceImpl implements RequestService {
             }
 
             result.setConfirmedRequests(requestMapper.mapToRequestsDto(confirmed));
-            result.setConfirmedRequests(requestMapper.mapToRequestsDto(rejected));
+            result.setRejectedRequests(requestMapper.mapToRequestsDto(rejected));
         }
 
         return result;
@@ -121,6 +131,9 @@ public class RequestServiceImpl implements RequestService {
         requestStorage.checkRequestExist(requestId);
 
         Request currentRequest = requestStorage.getRequestByUserIdAndRequestId(userId, requestId);
+        currentRequest.setStatus(CANCELED);
+        requestStorage.put(currentRequest);
+
         return requestMapper.mapToRequestDto(currentRequest);
     }
 
@@ -149,24 +162,8 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public void checkEventIsValid(Event event, int count) {
-        if (!State.PUBLISHED.equals(event.getState()) || event.getParticipantLimit() + count > event.getParticipantLimit()) {
-            throw new CheckValidationRequestException(VALIDATION_REQUEST_EXCEPTION);
-        }
-    }
-
-    @Override
-    public Boolean checkLimitEvent(Event event) {
-        if (event.getParticipantLimit() + 1 > event.getParticipantLimit()) {
-            throw new CheckValidationRequestException(VALIDATION_REQUEST_EXCEPTION);
-        } else {
-            return true;
-        }
-    }
-
-    @Override
     public void checkRequestStatus(Request request) {
-        if (!(Status.PENDING).equals(request.getStatus())) {
+        if (!Status.PENDING.equals(request.getStatus())) {
             throw new CheckValidationRequestException(VALIDATION_REQUEST_EXCEPTION);
         }
     }

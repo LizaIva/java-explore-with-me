@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.ewm.dto.event.CreateEventDto;
 import ru.practicum.explorewithme.ewm.dto.event.EventDto;
+import ru.practicum.explorewithme.ewm.dto.event.LocationDto;
 import ru.practicum.explorewithme.ewm.exception.StateValidationException;
 import ru.practicum.explorewithme.ewm.exception.TimeValidationException;
 import ru.practicum.explorewithme.ewm.model.event.Event;
@@ -20,6 +21,9 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import static ru.practicum.explorewithme.ewm.dto.event.StateAction.PUBLISH_EVENT;
+import static ru.practicum.explorewithme.ewm.model.event.State.CANCELED;
 
 @Slf4j
 @Service
@@ -68,7 +72,9 @@ public class EventServiceImpl implements EventService {
         checkEventTime(createEventDto.getEventDate());
 
         Event currentEvent = eventStorage.getEventById(eventId);
-        checkState(currentEvent.getState());
+        if (State.PUBLISHED.equals(currentEvent.getState())) {
+            throw new StateValidationException(String.format(STATE_EXCEPTION));
+        }
 
         return changeEvent(createEventDto, currentEvent);
     }
@@ -80,27 +86,59 @@ public class EventServiceImpl implements EventService {
         checkEventTimeForAdmin(createEventDto.getEventDate());
 
         Event currentEvent = eventStorage.getEventById(eventId);
-        checkState(currentEvent.getState());
-
-        if ("PUBLISH_EVENT".equals(createEventDto.getStateAction())) {
-            currentEvent.setState(State.PUBLISHED);
-        } else {
-            currentEvent.setState(State.CANCELED);
+        if (State.PUBLISHED.equals(currentEvent.getState()) || CANCELED.equals(currentEvent.getState())) {
+            throw new StateValidationException(String.format(STATE_EXCEPTION));
         }
 
         return changeEvent(createEventDto, currentEvent);
     }
 
     private EventDto changeEvent(CreateEventDto createEventDto, Event currentEvent) {
-        currentEvent.setAnnotation(createEventDto.getAnnotation());
-        currentEvent.setCategory(categoryStorage.getById(createEventDto.getCategory()));
-        currentEvent.setDescription(createEventDto.getDescription());
-        currentEvent.setEventDate(createEventDto.getEventDate());
-        currentEvent.setLocation(eventMapper.mapToLocation(createEventDto.getLocation()));
-        currentEvent.setPaid(currentEvent.getPaid());
-        currentEvent.setParticipantLimit(createEventDto.getParticipantLimit());
-        currentEvent.setRequestModeration(createEventDto.getRequestModeration());
-        currentEvent.setTitle(createEventDto.getTitle());
+        if (createEventDto.getAnnotation() != null) {
+            currentEvent.setAnnotation(createEventDto.getAnnotation());
+        }
+        if (createEventDto.getCategory() != null) {
+            currentEvent.setCategory(categoryStorage.getById(createEventDto.getCategory()));
+        }
+        if (createEventDto.getDescription() != null) {
+            currentEvent.setDescription(createEventDto.getDescription());
+        }
+        if (createEventDto.getEventDate() != null) {
+            currentEvent.setEventDate(createEventDto.getEventDate());
+        }
+        if (createEventDto.getPaid() != null) {
+            currentEvent.setPaid(currentEvent.getPaid());
+        }
+        if (createEventDto.getParticipantLimit() != null) {
+            currentEvent.setParticipantLimit(createEventDto.getParticipantLimit());
+        }
+        if (createEventDto.getRequestModeration() != null) {
+            currentEvent.setRequestModeration(createEventDto.getRequestModeration());
+        }
+        if (createEventDto.getTitle() != null) {
+            currentEvent.setTitle(createEventDto.getTitle());
+        }
+
+        LocationDto location = createEventDto.getLocation();
+        if (location != null) {
+            currentEvent.setLocationLat(location.getLat());
+            currentEvent.setLocationLon(location.getLon());
+        }
+
+        if (createEventDto.getStateAction() != null) {
+            switch (createEventDto.getStateAction()) {
+                case CANCEL_REVIEW:
+                case REJECT_EVENT:
+                    currentEvent.setState(CANCELED);
+                    break;
+                case SEND_TO_REVIEW:
+                    currentEvent.setState(State.PENDING);
+                    break;
+                case PUBLISH_EVENT:
+                    currentEvent.setState(State.PUBLISHED);
+                    break;
+            }
+        }
 
         Event actualEvent = eventStorage.put(currentEvent);
         return eventMapper.mapToEventDto(actualEvent);
@@ -108,17 +146,21 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventDto> getEventsByInitiatorsStatesCategories(List<Integer> initiatorsId,
-                                                                List<String> states,
+                                                                List<State> states,
                                                                 List<Integer> categories,
                                                                 String rangeStart,
                                                                 String rangeEnd,
                                                                 Integer from, Integer size) {
-        for (Integer userId : initiatorsId) {
-            userStorage.checkUser(userId);
+        if (initiatorsId != null) {
+            for (Integer userId : initiatorsId) {
+                userStorage.checkUser(userId);
+            }
         }
 
-        for (Integer categoryId : categories) {
-            categoryStorage.checkCategory(categoryId);
+        if (categories != null) {
+            for (Integer categoryId : categories) {
+                categoryStorage.checkCategory(categoryId);
+            }
         }
 
         LocalDateTime decodedStart = decodeDateTime(rangeStart);
@@ -139,17 +181,20 @@ public class EventServiceImpl implements EventService {
                                             Boolean onlyAvailable,
                                             String sort,
                                             Integer from, Integer size) {
-        for (Integer categoryId : categories) {
-            categoryStorage.checkCategory(categoryId);
+        if (categories != null) {
+            for (Integer categoryId : categories) {
+                categoryStorage.checkCategory(categoryId);
+            }
         }
 
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = LocalDateTime.now().plusYears(10);
-        if (!rangeStart.isEmpty()) {
+
+        if (rangeStart != null && !rangeStart.isEmpty()) {
             start = decodeDateTime(rangeStart);
         }
 
-        if (!rangeEnd.isEmpty()) {
+        if (rangeEnd != null && !rangeEnd.isEmpty()) {
             end = decodeDateTime(rangeEnd);
         }
 
@@ -173,6 +218,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public void checkEventTime(LocalDateTime time) {
+        if (time == null) {
+            return;
+        }
         if (time.isBefore(LocalDateTime.now().plusHours(2))) {
             throw new TimeValidationException(String.format(TIME_EXCEPTION, time));
         }
@@ -180,19 +228,19 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public void checkEventTimeForAdmin(LocalDateTime time) {
+        if (time == null) {
+            return;
+        }
         if (time.isBefore(LocalDateTime.now().plusHours(1))) {
             throw new TimeValidationException(String.format(TIME_EXCEPTION, time));
         }
     }
 
-    @Override
-    public void checkState(State state) {
-        if (State.PUBLISHED.equals(state)) {
-            throw new StateValidationException(String.format(STATE_EXCEPTION));
-        }
-    }
-
     private static LocalDateTime decodeDateTime(String dateTime) {
+        if (dateTime == null) {
+            return null;
+        }
+
         return LocalDateTime.parse(URLDecoder.decode(dateTime, StandardCharsets.UTF_8), START_END_DATE_FORMATTER);
     }
 }

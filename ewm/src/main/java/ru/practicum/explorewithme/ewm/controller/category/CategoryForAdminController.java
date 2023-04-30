@@ -2,6 +2,7 @@ package ru.practicum.explorewithme.ewm.controller.category;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.ewm.dto.category.CategoryDto;
 import ru.practicum.explorewithme.ewm.dto.category.CreateCategoryDto;
@@ -17,12 +18,14 @@ public class CategoryForAdminController {
     private final CategoryService categoryService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public CategoryDto create(@RequestBody @Valid CreateCategoryDto createCategoryDto) {
         log.info("Create category");
         return categoryService.put(createCategoryDto);
     }
 
     @DeleteMapping("/{catId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Integer catId) {
         log.info("Delete category with id = {}", catId);
         categoryService.delete(catId);

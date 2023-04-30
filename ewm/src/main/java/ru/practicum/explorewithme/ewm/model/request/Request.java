@@ -27,7 +27,7 @@ public class Request {
     private Event event;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "requester_id")
     private User requester;
 
     @Column(name = "status", nullable = false)

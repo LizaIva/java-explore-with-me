@@ -1,15 +1,18 @@
 package ru.practicum.explorewithme.ewm.dto.event;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CreateEventDto {
     @NotBlank
     private String annotation;
@@ -17,7 +20,7 @@ public class CreateEventDto {
     private Integer category;
     @NotBlank
     private String description;
-    @FutureOrPresent
+
     private LocalDateTime eventDate;
     @NotNull
     private LocationDto location;
@@ -30,5 +33,5 @@ public class CreateEventDto {
     @NotBlank
     private String title;
 
-    private String stateAction;
+    private StateAction stateAction;
 }

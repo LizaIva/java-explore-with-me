@@ -8,6 +8,7 @@ import ru.practicum.explorewithme.ewm.dto.compilation.CreateCompilationDto;
 import ru.practicum.explorewithme.ewm.model.compilation.Compilation;
 import ru.practicum.explorewithme.ewm.service.compilation.CompilationService;
 import ru.practicum.explorewithme.ewm.storage.compilation.CompilationStorage;
+import ru.practicum.explorewithme.ewm.storage.event.EventStorage;
 import ru.practicum.explorewithme.ewm.utils.compilation.CompilationMapper;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 public class CompilationServiceImpl implements CompilationService {
     private final CompilationStorage compilationStorage;
     private final CompilationMapper compilationMapper;
+    private final EventStorage eventStorage;
 
     @Override
     public CompilationDto put(CreateCompilationDto createCompilationDto) {
@@ -38,12 +40,20 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationDto update(CreateCompilationDto compilationDto, Integer id) {
         compilationStorage.checkCompilation(id);
         Compilation compilation = compilationStorage.getById(id);
-        compilation.setPinned(compilationDto.getPinned());
-        compilation.setTitle(compilationDto.getTitle());
+
+        if (compilationDto.getPinned() != null) {
+            compilation.setPinned(compilationDto.getPinned());
+        }
+        if (compilationDto.getTitle() != null) {
+            compilation.setTitle(compilationDto.getTitle());
+        }
+        if (compilationDto.getEvents() != null) {
+            compilation.setEvents(eventStorage.findAllByIdIn(compilationDto.getEvents()));
+        }
         log.info("Update category");
 
-        Compilation actualCompilation = compilationStorage.update(compilation);
-        return compilationMapper.mapToCompilationDto(actualCompilation);
+        compilationStorage.update(compilation);
+        return compilationMapper.mapToCompilationDto(compilation);
     }
 
     @Override

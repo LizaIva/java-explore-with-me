@@ -28,8 +28,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAll(Integer from, Integer size) {
-        return userMapper.mapToUsersDto(userStorage.getAll(from, size));
+    public List<UserDto> getAll(List<Integer> ids, Integer from, Integer size) {
+        List<User> users;
+        if (ids != null && !ids.isEmpty()) {
+            users = userStorage.getAllByIds(ids, from, size);
+        } else {
+            users = userStorage.getAll(from, size);
+        }
+        return userMapper.mapToUsersDto(users);
     }
 
     @Override

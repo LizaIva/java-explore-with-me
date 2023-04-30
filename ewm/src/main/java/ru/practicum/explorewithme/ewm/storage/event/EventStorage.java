@@ -25,7 +25,7 @@ public interface EventStorage {
     Event getEventByIdAndState(Integer eventId, State state);
 
     List<Event> findAllByInitiatorAndStatesAndCategories(List<Integer> initiatorsId,
-                                                         List<String> states,
+                                                         List<State> states,
                                                          List<Integer> categories,
                                                          LocalDateTime rangeStart,
                                                          LocalDateTime rangeEnd,
@@ -45,4 +45,6 @@ public interface EventStorage {
     Boolean checkUserInitiatorForEvent(Integer eventId, Integer userId);
 
     void checkEvent(Integer id);
+
+    List<Event> findAllByIdIn(List<Integer> events);
 }

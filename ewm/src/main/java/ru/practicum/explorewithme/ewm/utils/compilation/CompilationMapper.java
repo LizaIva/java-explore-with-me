@@ -6,6 +6,8 @@ import ru.practicum.explorewithme.ewm.dto.compilation.CompilationDto;
 import ru.practicum.explorewithme.ewm.dto.compilation.CreateCompilationDto;
 import ru.practicum.explorewithme.ewm.model.compilation.Compilation;
 import ru.practicum.explorewithme.ewm.repository.event.EventRepository;
+import ru.practicum.explorewithme.ewm.storage.event.EventStorage;
+import ru.practicum.explorewithme.ewm.utils.event.EventMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,12 +15,14 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class CompilationMapper {
-    private final EventRepository eventRepository;
+
+    private final EventStorage eventStorage;
+    private final EventMapper eventMapper;
 
     public CompilationDto mapToCompilationDto(Compilation compilation) {
         return CompilationDto.builder()
                 .id(compilation.getId())
-                .events(compilation.getEvents())
+                .events(eventMapper.mapToEventsDto(compilation.getEvents()))
                 .pinned(compilation.getPinned())
                 .title(compilation.getTitle())
                 .build();
@@ -28,7 +32,7 @@ public class CompilationMapper {
         return Compilation.builder()
                 .pinned(createCompilationDto.getPinned())
                 .title(createCompilationDto.getTitle())
-                .events(eventRepository.findAllByIdIn(createCompilationDto.getEvents()))
+                .events(eventStorage.findAllByIdIn(createCompilationDto.getEvents()))
                 .build();
     }
 

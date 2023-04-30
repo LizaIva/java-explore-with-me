@@ -1,5 +1,6 @@
 package ru.practicum.explorewithme.ewm.service.request;
 
+import ru.practicum.explorewithme.ewm.dto.request.InformationRequestDto;
 import ru.practicum.explorewithme.ewm.dto.request.RequestDto;
 import ru.practicum.explorewithme.ewm.model.event.Event;
 import ru.practicum.explorewithme.ewm.model.request.EventRequestStatusUpdateResultDto;
@@ -15,7 +16,7 @@ public interface RequestService {
 
     RequestDto put(Integer userId, Integer eventId);
 
-    EventRequestStatusUpdateResultDto updateRequest(Integer userId, Integer eventId, Set<Integer> requestsId, String status);
+    EventRequestStatusUpdateResultDto updateRequest(Integer userId, Integer eventId, InformationRequestDto informationRequestDto);
 
     List<RequestDto> getRequestsByUserId(Integer userId);
 
@@ -26,10 +27,6 @@ public interface RequestService {
     void checkRequestAlreadyExist(Integer userId, Integer eventId);
 
     void checkUserIsInitiatorEvent(Integer eventId, Integer userId);
-
-    void checkEventIsValid(Event event, int count);
-
-    Boolean checkLimitEvent(Event event);
 
     void checkRequestStatus(Request request);
 }

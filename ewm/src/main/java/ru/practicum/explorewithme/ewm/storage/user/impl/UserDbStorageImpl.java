@@ -2,6 +2,7 @@ package ru.practicum.explorewithme.ewm.storage.user.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import ru.practicum.explorewithme.ewm.exception.UnknownDataException;
 import ru.practicum.explorewithme.ewm.model.user.User;
@@ -13,6 +14,7 @@ import java.util.List;
 @Component("userDbStorageImpl")
 @RequiredArgsConstructor
 public class UserDbStorageImpl implements UserStorage {
+
     private final UserRepository userRepository;
 
     @Override
@@ -23,6 +25,11 @@ public class UserDbStorageImpl implements UserStorage {
     @Override
     public List<User> getAll(Integer from, Integer size) {
         return userRepository.findAll(PageRequest.of(from, size)).getContent();
+    }
+
+    @Override
+    public List<User> getAllByIds(List<Integer> ids, Integer from, Integer size) {
+        return userRepository.findAllByIdIn(ids, PageRequest.of(from, size));
     }
 
     @Override

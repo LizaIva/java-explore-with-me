@@ -11,6 +11,8 @@ public interface UserStorage {
 
     List<User> getAll(Integer from, Integer size);
 
+    List<User> getAllByIds(List<Integer> ids, Integer from, Integer size);
+
     User getById(Integer id);
 
     void delete(Integer userId);

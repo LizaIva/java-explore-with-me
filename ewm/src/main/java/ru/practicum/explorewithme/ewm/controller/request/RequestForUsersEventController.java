@@ -3,10 +3,13 @@ package ru.practicum.explorewithme.ewm.controller.request;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.explorewithme.ewm.dto.request.InformationRequestDto;
 import ru.practicum.explorewithme.ewm.dto.request.RequestDto;
+import ru.practicum.explorewithme.ewm.dto.user.CreateUserDto;
 import ru.practicum.explorewithme.ewm.model.request.EventRequestStatusUpdateResultDto;
 import ru.practicum.explorewithme.ewm.service.request.RequestService;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
@@ -27,9 +30,9 @@ public class RequestForUsersEventController {
     @PatchMapping
     public EventRequestStatusUpdateResultDto updateRequest(@PathVariable Integer userId,
                                                            @PathVariable Integer eventId,
-                                                           @RequestParam(name = "requestsId") Set<Integer> requestsId,
-                                                           @RequestParam(name = "requestsId") String status) {
+                                                           @RequestBody InformationRequestDto requestsDto
+                                                           ) {
         log.info("Update events from userId = {}", userId);
-        return requestService.updateRequest(userId, eventId, requestsId, status);
+        return requestService.updateRequest(userId, eventId, requestsDto);
     }
 }

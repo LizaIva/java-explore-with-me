@@ -33,7 +33,8 @@ public class CategoryDbStorageImpl implements CategoryStorage {
 
     @Override
     public Category getById(Integer id) {
-        return categoryRepository.getReferenceById(id);
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new UnknownDataException(""));
     }
 
     @Override

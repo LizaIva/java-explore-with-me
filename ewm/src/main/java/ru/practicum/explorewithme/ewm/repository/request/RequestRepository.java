@@ -1,10 +1,12 @@
 package ru.practicum.explorewithme.ewm.repository.request;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.practicum.explorewithme.ewm.model.request.Request;
+import ru.practicum.explorewithme.ewm.model.request.Status;
 
 import java.util.List;
 import java.util.Set;
@@ -20,7 +22,12 @@ public interface RequestRepository extends JpaRepository<Request, Integer> {
 
     Request getRequestByRequesterIdAndId(Integer requesterId, Integer id);
 
-    List<Request> getRequestsByRequesterIdAndEventId(Integer requesterId, Integer eventId);
+    @Query("from requests r " +
+            "where r.event.initiator.id = :initiatorId and r.event.id = :eventId")
+    List<Request> getRequestsByEventInitiatorAndEventId(
+            @Param("initiatorId") Integer initiatorId,
+            @Param("eventId") Integer eventId
+    );
 
     List<Request> getRequestsByIdIsIn(Set<Integer> ids);
 }

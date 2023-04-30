@@ -19,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity(name = "events")
 public class Event {
+
     @Column(name = "event_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +40,7 @@ public class Event {
 
     @Column(name = "confirmed_requests", nullable = false)
     private Integer confirmedRequests;
+
     @Column(name = "event_date", nullable = false)
     private LocalDateTime eventDate;
 
@@ -68,10 +70,18 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private State state;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "location_id")
-    private Location location;
-    @ManyToMany(mappedBy = "events")
+    @Column(name = "location_lat")
+    private Double locationLat;
+
+    @Column(name = "location_lon")
+    private Double locationLon;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "compilations_events",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "compilation_id")
+    )
     private List<Compilation> compilations;
 
     @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)

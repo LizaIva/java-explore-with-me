@@ -1,7 +1,13 @@
 package ru.practicum.explorewithme.ewm.handler;
 
 public class ErrorResponse {
-    private final String error;
+
+    private int status;
+    private String error;
+
+    public ErrorResponse(int status) {
+        this.status = status;
+    }
 
     public ErrorResponse(String error) {
         this.error = error;
@@ -9,5 +15,9 @@ public class ErrorResponse {
 
     public String getError() {
         return error;
+    }
+
+    public int getStatus() {
+        return status;
     }
 }

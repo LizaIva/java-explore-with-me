@@ -22,7 +22,7 @@ public interface EventService {
     EventDto updateEventFromAdmin(Integer eventId, CreateEventDto createEventDto);
 
     List<EventDto> getEventsByInitiatorsStatesCategories(List<Integer> initiatorsId,
-                                                         List<String> states,
+                                                         List<State> states,
                                                          List<Integer> categories,
                                                          String rangeStart,
                                                          String rangeEnd,
@@ -44,6 +44,4 @@ public interface EventService {
     void checkEventTime(LocalDateTime time);
 
     void checkEventTimeForAdmin(LocalDateTime time);
-
-    void checkState(State state);
 }

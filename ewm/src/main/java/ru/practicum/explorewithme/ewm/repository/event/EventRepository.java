@@ -28,44 +28,39 @@ public interface EventRepository extends JpaRepository<Event, Integer>,
     Boolean isUserInitiatorForEvent(@Param("eventId") int eventId, @Param("userId") int userId);
 
     @Query("select e from events e " +
-            "where e.initiator.id IN (:initiatorsId) " +
-            "and e.state IN(:states) " +
-            "and e.category.id IN(:categories) " +
-            "and e.eventDate > :rangeStart " +
-            "and e.eventDate < :rangeEnd ")
-    Page<Event> findAllByInitiatorAndStatesAndCategories(@Param("initiatorsId") List<Integer> initiatorsId,
-                                                         @Param("states") List<String> states,
-                                                         @Param("categories") List<Integer> categories,
-                                                         @Param("rangeStart") LocalDateTime rangeStart,
-                                                         @Param("rangeEnd") LocalDateTime rangeEnd,
-                                                         Pageable pageable);
+            "where (:skipInitiatorSearch = 1 or e.initiator.id IN (:initiatorsId) )" +
+            "and (:skipStatesSearch = 1 or e.state IN (:states)) " +
+            "and (:skipCategoriesSearch = 1 or e.category.id IN (:categories)) " +
+            "and (cast(:rangeStart as date) is null or e.eventDate > :rangeStart) " +
+            "and (cast(:rangeEnd as date) is null or e.eventDate < :rangeEnd) ")
+    Page<Event> findAllByInitiatorAndStatesAndCategories(
+            @Param("initiatorsId") List<Integer> initiatorsId,
+            @Param("skipInitiatorSearch") Integer skipInitiatorSearch,
+            @Param("states") List<State> states,
+            @Param("skipStatesSearch") Integer skipStatesSearch,
+            @Param("categories") List<Integer> categories,
+            @Param("skipCategoriesSearch") Integer skipCategoriesSearch,
+            @Param("rangeStart") LocalDateTime rangeStart,
+            @Param("rangeEnd") LocalDateTime rangeEnd,
+            Pageable pageable
+    );
 
     @Query("select e from events e " +
-            "where (lower(e.annotation) like concat('%', :text, '%') or lower(e.description) like concat('%', :text, '%'))" +
-            "and e.category.id IN(:categories) " +
-            "and e.paid = :paid " +
+            "where (:skipTextSearch = 1 or (lower(e.annotation) like concat('%', :text, '%') or lower(e.description) like concat('%', :text, '%')))" +
+            "and (:skipCategoriesSearch = 1 or e.category.id IN(:categories)) " +
+            "and (cast(:paid as boolean ) is null or e.paid = :paid) " +
             "and e.eventDate > :rangeStart " +
             "and e.eventDate < :rangeEnd " +
-            "and e.confirmedRequests <= e.participantLimit+1 ")
+            "and (cast(:onlyAvailable as boolean ) is null or e.confirmedRequests <= e.participantLimit+1 )")
     Page<Event> findAllByFilterOnlyAvailable(@Param("text") String text,
+                                             @Param("skipTextSearch") Integer skipTextSearch,
                                              @Param("categories") List<Integer> categories,
+                                             @Param("skipCategoriesSearch") Integer skipCategoriesSearch,
                                              @Param("paid") Boolean paid,
                                              @Param("rangeStart") LocalDateTime rangeStart,
                                              @Param("rangeEnd") LocalDateTime rangeEnd,
+                                             @Param("onlyAvailable") Boolean onlyAvailable,
                                              Pageable pageable);
-
-    @Query("select e from events e " +
-            "where (lower(e.annotation) like concat('%', :text, '%') or lower(e.description) like concat('%', :text, '%'))" +
-            "and e.category.id IN(:categories) " +
-            "and e.paid = :paid " +
-            "and e.eventDate > :rangeStart " +
-            "and e.eventDate < :rangeEnd ")
-    Page<Event> findAllByFilter(@Param("text") String text,
-                                @Param("categories") List<Integer> categories,
-                                @Param("paid") Boolean paid,
-                                @Param("rangeStart") LocalDateTime rangeStart,
-                                @Param("rangeEnd") LocalDateTime rangeEnd,
-                                Pageable pageable);
 
     Event findEventByIdAndState(int eventId, State state);
 }

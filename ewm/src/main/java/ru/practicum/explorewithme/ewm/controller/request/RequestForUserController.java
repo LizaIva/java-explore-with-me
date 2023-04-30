@@ -2,6 +2,7 @@ package ru.practicum.explorewithme.ewm.controller.request;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.ewm.dto.request.RequestDto;
 import ru.practicum.explorewithme.ewm.service.request.RequestService;
@@ -16,6 +17,7 @@ public class RequestForUserController {
     private final RequestService requestService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public RequestDto create(@PathVariable Integer userId,
                              @RequestParam(name = "eventId") Integer eventId) {
         log.info("Create request from user with id = {} and event with id = {}", userId, eventId);

@@ -17,7 +17,7 @@ public class CompilationController {
 
     @GetMapping
     public List<CompilationDto> getAllByPinned(@RequestParam(name = "pinned", required = false) Boolean pinned,
-                                               @RequestParam(name = "from", required = false) Integer from,
+                                               @RequestParam(name = "from", required = false, defaultValue = "0") Integer from,
                                                @RequestParam(name = "size", required = false, defaultValue = "10") Integer size) {
         log.info("Request all compilations from {} size {} by pinned = {}", from, size, pinned);
         return compilationService.getAllByPinned(pinned, from, size);

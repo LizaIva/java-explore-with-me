@@ -6,14 +6,16 @@ import ru.practicum.explorewithme.ewm.dto.event.CreateEventDto;
 import ru.practicum.explorewithme.ewm.dto.event.EventDto;
 import ru.practicum.explorewithme.ewm.dto.event.LocationDto;
 import ru.practicum.explorewithme.ewm.model.event.Event;
-import ru.practicum.explorewithme.ewm.model.event.Location;
 import ru.practicum.explorewithme.ewm.storage.categoty.CategoryStorage;
 import ru.practicum.explorewithme.ewm.storage.user.UserStorage;
 import ru.practicum.explorewithme.ewm.utils.category.CategoryMapper;
 import ru.practicum.explorewithme.ewm.utils.user.UserMapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static ru.practicum.explorewithme.ewm.model.event.State.PENDING;
 
 @Component
 @RequiredArgsConstructor
@@ -25,6 +27,12 @@ public class EventMapper {
 
     public Event mapToEvent(CreateEventDto createEventDto, Integer userId) {
         return Event.builder()
+                .state(PENDING)
+                .confirmedRequests(0)
+                .views(0)
+                .participantLimit(createEventDto.getParticipantLimit())
+                .createdOn(LocalDateTime.now())
+                .publishedOn(LocalDateTime.now())
                 .annotation(createEventDto.getAnnotation())
                 .description(createEventDto.getDescription())
                 .category(categoryStorage.getById(createEventDto.getCategory()))
@@ -33,7 +41,8 @@ public class EventMapper {
                 .paid(createEventDto.getPaid())
                 .title(createEventDto.getTitle())
                 .requestModeration(createEventDto.getRequestModeration())
-                .location(mapToLocation(createEventDto.getLocation()))
+                .locationLat(createEventDto.getLocation().getLat())
+                .locationLon(createEventDto.getLocation().getLon())
                 .build();
     }
 
@@ -47,7 +56,7 @@ public class EventMapper {
                 .eventDate(event.getEventDate())
                 .id(event.getId())
                 .initiator(userMapper.mapToUserDto(event.getInitiator()))
-                .location(mapToLocationDto(event.getLocation()))
+                .location(mapToLocationDto(event.getLocationLat(), event.getLocationLon()))
                 .paid(event.getPaid())
                 .participantLimit(event.getParticipantLimit())
                 .publishedOn(event.getPublishedOn())
@@ -64,18 +73,10 @@ public class EventMapper {
                 .collect(Collectors.toList());
     }
 
-
-    public Location mapToLocation(LocationDto location) {
-        return Location.builder()
-                .locationLat(location.getLat())
-                .locationLon(location.getLon())
-                .build();
-    }
-
-    public LocationDto mapToLocationDto(Location location) {
+    public LocationDto mapToLocationDto(Double lat, Double lon) {
         return LocationDto.builder()
-                .lat(location.getLocationLat())
-                .lon(location.getLocationLon())
+                .lat(lat)
+                .lon(lon)
                 .build();
     }
 }

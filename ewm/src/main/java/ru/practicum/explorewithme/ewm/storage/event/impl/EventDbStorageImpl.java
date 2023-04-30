@@ -53,13 +53,22 @@ public class EventDbStorageImpl implements EventStorage {
 
     @Override
     public List<Event> findAllByInitiatorAndStatesAndCategories(List<Integer> initiatorsId,
-                                                                List<String> states,
+                                                                List<State> states,
                                                                 List<Integer> categories,
                                                                 LocalDateTime rangeStart,
                                                                 LocalDateTime rangeEnd,
                                                                 Integer from, Integer size) {
-        return eventRepository.findAllByInitiatorAndStatesAndCategories(initiatorsId, states, categories,
-                rangeStart, rangeEnd, PageRequest.of(from, size)).getContent();
+        return eventRepository.findAllByInitiatorAndStatesAndCategories(
+                initiatorsId,
+                initiatorsId == null ? 1 : 0,
+                states,
+                states == null ? 1 : 0,
+                categories,
+                categories == null ? 1 : 0,
+                rangeStart,
+                rangeEnd,
+                PageRequest.of(from, size)
+        ).getContent();
     }
 
     @Override
@@ -78,13 +87,13 @@ public class EventDbStorageImpl implements EventStorage {
             sortFilter = PAGIN_SORT_VIEWS;
         }
 
-        if (onlyAvailable) {
-            return eventRepository.findAllByFilterOnlyAvailable(text, categories, paid, rangeStart,
-                    rangeEnd, PageRequest.of(from, size, sortFilter)).getContent();
-        } else {
-            return eventRepository.findAllByFilter(text, categories, paid,
-                    rangeStart, rangeEnd, PageRequest.of(from, size, sortFilter)).getContent();
-        }
+        return eventRepository.findAllByFilterOnlyAvailable(
+                text == null ? null : text.toLowerCase(),
+                text == null ? 1 : 0,
+                categories,
+                categories == null ? 1 : 0,
+                paid, rangeStart,
+                rangeEnd, onlyAvailable, PageRequest.of(from, size, sortFilter)).getContent();
     }
 
     @Override
@@ -104,5 +113,10 @@ public class EventDbStorageImpl implements EventStorage {
         if (!eventRepository.existsById(id)) {
             throw new UnknownDataException(String.format(EVENT_NOT_FOUND, id));
         }
+    }
+
+    @Override
+    public List<Event> findAllByIdIn(List<Integer> events) {
+        return eventRepository.findAllByIdIn(events);
     }
 }

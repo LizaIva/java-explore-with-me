@@ -23,7 +23,7 @@ public class CategoryController {
 
 
     @GetMapping
-    public List<CategoryDto> getAll(@RequestParam(name = "from", required = false) Integer from,
+    public List<CategoryDto> getAll(@RequestParam(name = "from", required = false, defaultValue = "0") Integer from,
                                     @RequestParam(name = "size", required = false, defaultValue = "10") Integer size) {
         log.info("Request all categories from {} size {}", from, size);
         return categoryService.getAll(from, size);
