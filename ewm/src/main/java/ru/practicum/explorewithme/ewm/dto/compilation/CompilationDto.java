@@ -3,7 +3,6 @@ package ru.practicum.explorewithme.ewm.dto.compilation;
 import lombok.Builder;
 import lombok.Data;
 import ru.practicum.explorewithme.ewm.dto.event.EventDto;
-import ru.practicum.explorewithme.ewm.model.event.Event;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

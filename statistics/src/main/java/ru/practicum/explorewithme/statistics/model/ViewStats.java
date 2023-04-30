@@ -1,6 +1,9 @@
 package ru.practicum.explorewithme.statistics.model;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter

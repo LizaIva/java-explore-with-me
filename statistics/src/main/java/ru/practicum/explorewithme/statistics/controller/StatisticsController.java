@@ -2,6 +2,7 @@ package ru.practicum.explorewithme.statistics.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.statistics.dto.StatisticsDto;
 import ru.practicum.explorewithme.statistics.dto.ViewStatsDto;
@@ -18,6 +19,7 @@ public class StatisticsController {
     private final StatisticsService statisticsService;
 
     @PostMapping("/hit")
+    @ResponseStatus(HttpStatus.CREATED)
     public StatisticsDto create(@RequestBody @Valid StatisticsDto statisticsDto) {
         log.info("Создание действия для статистики");
         return statisticsService.put(statisticsDto);

@@ -20,5 +20,5 @@ public class StatisticsDto {
     @NotEmpty
     private String ip;
     @PastOrPresent
-    private LocalDateTime created;
+    private LocalDateTime timestamp;
 }

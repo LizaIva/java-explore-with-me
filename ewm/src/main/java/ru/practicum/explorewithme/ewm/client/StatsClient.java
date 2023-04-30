@@ -36,7 +36,7 @@ public class StatsClient {
                 .app(serviceName)
                 .ip(request.getRemoteHost())
                 .uri(request.getRequestURI())
-                .created(LocalDateTime.now())
+                .timestamp(LocalDateTime.now())
                 .build();
 
         HttpRequest clientRequest = HttpRequest.newBuilder()

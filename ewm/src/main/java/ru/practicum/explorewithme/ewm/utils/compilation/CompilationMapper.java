@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import ru.practicum.explorewithme.ewm.dto.compilation.CompilationDto;
 import ru.practicum.explorewithme.ewm.dto.compilation.CreateCompilationDto;
 import ru.practicum.explorewithme.ewm.model.compilation.Compilation;
-import ru.practicum.explorewithme.ewm.repository.event.EventRepository;
 import ru.practicum.explorewithme.ewm.storage.event.EventStorage;
 import ru.practicum.explorewithme.ewm.utils.event.EventMapper;
 

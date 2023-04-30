@@ -1,19 +1,13 @@
 package ru.practicum.explorewithme.ewm.handler;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.connector.Response;
-import org.hibernate.PropertyValueException;
-import org.springframework.boot.actuate.trace.http.HttpTrace;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.explorewithme.ewm.exception.*;
 
 @Slf4j

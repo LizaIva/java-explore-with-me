@@ -2,7 +2,6 @@ package ru.practicum.explorewithme.ewm.storage.user.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import ru.practicum.explorewithme.ewm.exception.UnknownDataException;
 import ru.practicum.explorewithme.ewm.model.user.User;

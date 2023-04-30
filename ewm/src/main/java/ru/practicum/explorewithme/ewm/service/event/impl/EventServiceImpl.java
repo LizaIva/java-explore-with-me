@@ -22,7 +22,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static ru.practicum.explorewithme.ewm.dto.event.StateAction.PUBLISH_EVENT;
 import static ru.practicum.explorewithme.ewm.model.event.State.CANCELED;
 
 @Slf4j
