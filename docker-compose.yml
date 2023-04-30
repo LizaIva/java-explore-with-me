@@ -19,7 +19,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/explore_with_me
 
   ewm-service:
-    build: statistics
+    build: ewm
     ports:
       - "8080:8080"
     depends_on:
