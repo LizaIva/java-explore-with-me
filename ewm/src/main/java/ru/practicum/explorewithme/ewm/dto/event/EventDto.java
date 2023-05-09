@@ -10,6 +10,7 @@ import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @Data
@@ -52,4 +53,6 @@ public class EventDto {
 
     @NotNull
     private Integer views;
+
+    private List<CommentDto> comments;
 }
