@@ -52,7 +52,7 @@ class StatisticsDbStorageImplTest {
                 .app(APP)
                 .uri(URI)
                 .ip(IP)
-                .created(now)
+                .timestamp(now)
                 .build());
 
         List<Statistics> actualStatistics = statisticsRepository.findAll();
@@ -69,7 +69,7 @@ class StatisticsDbStorageImplTest {
                 .app(APP)
                 .uri(URI)
                 .ip(IP)
-                .created(now)
+                .timestamp(now)
                 .build());
 
         String start = now.minusHours(1).format(START_END_DATE_FORMATTER);

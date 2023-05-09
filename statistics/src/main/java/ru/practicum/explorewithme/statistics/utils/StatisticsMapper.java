@@ -18,7 +18,7 @@ public class StatisticsMapper {
                 .app(statistics.getApp())
                 .uri(statistics.getUri())
                 .ip(statistics.getIp())
-                .created(statistics.getCreated())
+                .timestamp(statistics.getCreated())
                 .build();
     }
 
@@ -27,7 +27,7 @@ public class StatisticsMapper {
                 .app(statisticsDto.getApp())
                 .uri(statisticsDto.getUri())
                 .ip(statisticsDto.getIp())
-                .created(statisticsDto.getCreated())
+                .created(statisticsDto.getTimestamp())
                 .build();
     }
 
