@@ -17,7 +17,7 @@ public class CommentForAdminController {
     @PatchMapping
     public CommentDto update(@PathVariable Integer commentId,
                              @RequestParam(name = "state") State state) {
-        log.info("Update state fos comment with id {}", commentId);
+        log.info("Update state for comment with id {}", commentId);
         return commentService.updateState(commentId, state);
     }
 }

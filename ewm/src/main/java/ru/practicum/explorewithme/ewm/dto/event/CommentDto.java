@@ -1,7 +1,6 @@
 package ru.practicum.explorewithme.ewm.dto.event;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import ru.practicum.explorewithme.ewm.model.event.State;
 
 import javax.validation.constraints.NotBlank;
@@ -9,6 +8,10 @@ import javax.validation.constraints.NotNull;
 
 @Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class CommentDto {
     @NotNull
     private Integer id;

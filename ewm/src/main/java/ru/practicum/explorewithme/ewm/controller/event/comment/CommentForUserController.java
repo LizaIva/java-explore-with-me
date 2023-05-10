@@ -19,8 +19,10 @@ public class CommentForUserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentDto create(@RequestBody @Valid CreateCommentDto commentDto) {
+    public CommentDto create(@RequestBody @Valid CreateCommentDto commentDto,
+                             @PathVariable Integer userId,
+                             @PathVariable Integer eventId) {
         log.info("Create comment");
-        return commentService.putComment(commentDto);
+        return commentService.putComment(commentDto, userId, eventId);
     }
 }

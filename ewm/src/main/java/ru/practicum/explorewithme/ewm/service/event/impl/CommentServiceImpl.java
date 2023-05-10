@@ -25,14 +25,11 @@ public class CommentServiceImpl implements CommentService {
     private final CommentMapper commentMapper;
 
     @Override
-    public CommentDto putComment(CreateCommentDto commentDto) {
-        Integer userId = commentDto.getUserId();
-        Integer eventId = commentDto.getEventId();
-
+    public CommentDto putComment(CreateCommentDto commentDto, Integer userId, Integer eventId) {
         userStorage.checkUser(userId);
         eventStorage.checkEvent(eventId);
 
-        Comment createComment = commentMapper.mapToComment(commentDto);
+        Comment createComment = commentMapper.mapToComment(commentDto, userId, eventId);
         Comment actualComment = commentStorage.put(createComment);
         log.info("Create comment with id {} from user with id {} to event with id {}", actualComment.getId(),
                 userId, eventId);

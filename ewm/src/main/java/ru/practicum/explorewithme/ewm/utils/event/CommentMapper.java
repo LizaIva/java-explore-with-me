@@ -5,9 +5,11 @@ import org.springframework.stereotype.Component;
 import ru.practicum.explorewithme.ewm.dto.event.CommentDto;
 import ru.practicum.explorewithme.ewm.dto.event.CreateCommentDto;
 import ru.practicum.explorewithme.ewm.model.event.Comment;
+import ru.practicum.explorewithme.ewm.model.event.State;
 import ru.practicum.explorewithme.ewm.storage.event.EventStorage;
 import ru.practicum.explorewithme.ewm.storage.user.UserStorage;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,18 +29,20 @@ public class CommentMapper {
                 .build();
     }
 
-    public Comment mapToComment(CreateCommentDto commentDto) {
+    public Comment mapToComment(CreateCommentDto commentDto, Integer userId, Integer eventId) {
         return Comment.builder()
                 .text(commentDto.getText())
-                .user(userStorage.getById(commentDto.getUserId()))
-                .event(eventStorage.getEventById(commentDto.getEventId()))
-                .state(commentDto.getState())
+                .user(userStorage.getById(userId))
+                .event(eventStorage.getEventById(eventId))
+                .state(State.PENDING)
                 .build();
     }
 
     public List<CommentDto> mapToCommentsDto(List<Comment> comments) {
+        List<CommentDto> commentsDto = new ArrayList<>();
+
         if (comments == null || comments.isEmpty()) {
-            return null;
+            return commentsDto;
         }
         return comments.stream()
                 .map(this::mapToCommentDto)

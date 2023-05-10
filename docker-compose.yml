@@ -4,6 +4,8 @@ services:
     image: postgres:13.7-alpine
     volumes:
       - /var/lib/postgresql/data/
+    ports:
+      - "5442:5432"
     environment:
       - POSTGRES_DB=explore_with_me
       - POSTGRES_USER=postgres
