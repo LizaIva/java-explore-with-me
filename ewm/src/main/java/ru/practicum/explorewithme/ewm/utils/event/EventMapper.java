@@ -24,6 +24,7 @@ public class EventMapper {
     private final UserStorage userStorage;
     private final CategoryMapper categoryMapper;
     private final UserMapper userMapper;
+    private final CommentMapper commentMapper;
 
     public Event mapToEvent(CreateEventDto createEventDto, Integer userId) {
         return Event.builder()
@@ -64,6 +65,7 @@ public class EventMapper {
                 .state(event.getState())
                 .title(event.getTitle())
                 .views(event.getViews())
+                .comments(commentMapper.mapToCommentsDto(event.getComments()))
                 .build();
     }
 

@@ -87,4 +87,8 @@ public class Event {
     @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Request> requests;
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<Comment> comments;
 }
