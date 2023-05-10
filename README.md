@@ -2,4 +2,4 @@
 Template repository for ExploreWithMe project.
 
 Future_comments pull request
-https://github.com/LizaIva/java-explore-with-me/pulls 
+https://github.com/LizaIva/java-explore-with-me/pull/5
