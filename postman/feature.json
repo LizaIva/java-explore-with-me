@@ -1,7 +1,7 @@
 {
   "info": {
     "_postman_id": "333648de-a8f3-4924-a0bc-b27c19ace371",
-    "name": "Sprint 17 Explore with me (feature_comments)",
+    "name": "Explore with me feature_comments",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "26428225"
   },
@@ -268,12 +268,12 @@
                   "pm.test(\"Test event 'annotation' field\", function () {",
                   "    var jsonData = pm.response.json();",
                   "    pm.expect(jsonData).to.have.property('annotation');",
-                  "    pm.expect(jsonData.annotation, '\"annotation\" must be \"Сплав на байдарках\"').to.eql('Сплав на байдарках');",
+                  "    pm.expect(jsonData.annotation, '\"annotation\" must be \"Поход в лес\"').to.eql('Поход в лес');",
                   "});",
                   "pm.test(\"Test event 'description' field\", function () {",
                   "    var jsonData = pm.response.json();",
                   "    pm.expect(jsonData).to.have.property('description');",
-                  "    pm.expect(jsonData.description, '\"description\" must be \"На спокойной воде — это парение\"').to.eql('На спокойной воде — это парение');",
+                  "    pm.expect(jsonData.description, '\"description\" must be \"Однодневный трекинг-тур\"').to.eql('Однодневный трекинг-тур');",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -296,7 +296,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"annotation\": \"Сплав на байдарках\",\n    \"category\": \"1\",\n    \"description\": \"На спокойной воде — это парение\",\n    \"eventDate\": \"2024-12-31 15:10:05\",\n    \"location\":  { \n \"lat\" : \"55.754167\", \n \"lon\" : \"37.62\"},\n  \"paid\": \"true\",\n  \"participantLimit\": \"10\",\n  \"requestModeration\": \"false\",\n  \"title\": \"Сплав\"\n }"
+              "raw": "{\n    \"annotation\": \"Поход в лес\",\n    \"category\": \"1\",\n    \"description\": \"Однодневный трекинг-тур\",\n    \"eventDate\": \"2024-11-31 15:10:05\",\n    \"location\":  { \n \"lat\" : \"55.754167\", \n \"lon\" : \"37.62\"},\n  \"paid\": \"true\",\n  \"participantLimit\": \"10\",\n  \"requestModeration\": \"false\",\n  \"title\": \"Поход\"\n }"
             },
             "url": {
               "raw": "{{baseUrl}}/users/:userId/events",
